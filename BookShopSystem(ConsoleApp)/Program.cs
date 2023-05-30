@@ -338,7 +338,7 @@ namespace MyApplication
 
                 }
 
-                Console.WriteLine("\nPress another one to exit!");
+                Console.WriteLine("\nPress one more time to exit!");
 
                 Console.ReadKey();
             }

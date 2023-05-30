@@ -435,6 +435,7 @@ namespace BookShop.StartUp
             await bookShopDb.SaveChangesAsync();
         }
 
+        // Task 15
         public static async Task<int> RemoveBooks(BookShopContext bookShopDb)
         {
             List<Book> booksToDelete = await bookShopDb.Books.Where(b => b.Copies < 4200)

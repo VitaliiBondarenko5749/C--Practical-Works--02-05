@@ -143,7 +143,7 @@ namespace HospitalDatabase_ConsoleApplication
                 }
             }
 
-            Console.WriteLine("Press one more time to exit");
+            Console.WriteLine("\nPress one more time to exit!");
 
             Console.ReadKey();
         }

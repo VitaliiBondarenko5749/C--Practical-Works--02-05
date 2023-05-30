@@ -60,7 +60,7 @@ namespace MyApplication
                 }
             }
 
-            Console.WriteLine("Press one more time to exit");
+            Console.WriteLine("\nPress one more time to exit!");
 
             Console.ReadKey();
         }
