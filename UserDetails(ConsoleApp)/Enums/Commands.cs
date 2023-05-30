@@ -4,6 +4,7 @@
     {
         ShowAllUserPaymentMethods,
         PayBills,
+        AddDeposit,
         ClearTheConsole,
         Exit
     }

@@ -59,6 +59,10 @@ namespace MyApplication
                         }
                 }
             }
+
+            Console.WriteLine("Press one more time to exit");
+
+            Console.ReadKey();
         }
 
         private static void ShowMenu()

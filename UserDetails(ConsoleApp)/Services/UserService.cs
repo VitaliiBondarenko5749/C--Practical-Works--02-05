@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using P01_BillsPaymentSystem.Data;
 using P01_BillsPaymentSystem.Data.Models;
 using P01_BillsPaymentSystem.Data.Models.Enums;
@@ -88,7 +89,7 @@ namespace UserDetails_ConsoleApp_.Services
                     .ThenBy(pm => pm.CreditCardId)
                     .ToListAsync();
 
-                if (paymentMethods == null || paymentMethods.Count == 0)
+                if (paymentMethods.IsNullOrEmpty())
                 {
                     Console.WriteLine("Empty list of the payment methods.");
                     return;
@@ -111,6 +112,52 @@ namespace UserDetails_ConsoleApp_.Services
                         paymentMethod.CreditCard?.Withdraw(amount);
 
                         if (paymentMethod.CreditCard?.LimitLeft >= 0)
+                        {
+                            billsPaymentSystemDb.Update(paymentMethod.CreditCard);
+                            break;
+                        }
+                    }
+                }
+
+                await billsPaymentSystemDb.SaveChangesAsync();
+            }
+        }
+
+        public static async Task AddDeposit(Guid userId, decimal amount)
+        {
+            using (BillsPaymentSystemContext billsPaymentSystemDb = new())
+            {
+                List<PaymentMethod> paymentMethods = await billsPaymentSystemDb.PaymentMethods
+                    .Include(pm => pm.BankAccount)
+                    .Include(pm => pm.CreditCard)
+                    .Where(pm => pm.UserId.Equals(userId))
+                    .OrderBy(pm => pm.BankAccountId)
+                    .ThenBy(pm => pm.CreditCardId)
+                    .ToListAsync();
+
+                if (paymentMethods.IsNullOrEmpty())
+                {
+                    Console.WriteLine("Empty list of the payment methods.");
+                    return;
+                }
+
+                foreach(PaymentMethod paymentMethod in paymentMethods)
+                {
+                    if (paymentMethod.Type == PaymentMethodTypes.BankAccount.ToString())
+                    {
+                        paymentMethod.BankAccount?.Deposit(amount);
+
+                        if (paymentMethod.BankAccount?.Balance >= 0)
+                        {
+                            billsPaymentSystemDb.Update(paymentMethod.BankAccount);
+                            break;
+                        }
+                    }
+                    else if (paymentMethod.Type == PaymentMethodTypes.CreditCard.ToString())
+                    {
+                        paymentMethod.CreditCard?.Deposit(amount);
+
+                        if (paymentMethod.CreditCard?.MoneyOwed < 0)
                         {
                             billsPaymentSystemDb.Update(paymentMethod.CreditCard);
                             break;

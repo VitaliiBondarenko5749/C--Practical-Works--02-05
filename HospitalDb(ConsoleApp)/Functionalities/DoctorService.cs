@@ -113,25 +113,6 @@ namespace HospitalDb_ConsoleApp_.Functionalities
             return null;
         }
 
-        private static bool VerifyPassword(string password, byte[] storedHash, byte[] storedSalt)
-        {
-            using (var hmac = new HMACSHA512(storedSalt))
-            {
-                byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-                // Compare the computed hash with the stored hash byte by byte
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != storedHash[i])
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-        }
-
         private static bool VerifyPasswordHash(string password, string passwordHashString)
         {
             byte[] passwordHash, passwordSalt;

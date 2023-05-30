@@ -47,7 +47,6 @@ namespace MyApplication
                                 break;
                             }
 
-
                             Console.Write("Amount: ");
 
 #nullable disable
@@ -55,6 +54,27 @@ namespace MyApplication
 #nullable enable
 
                             await UserService.PayBills(userId, amount);
+                            break;
+                        }
+                    case Commands.AddDeposit:
+                        {
+                            Console.Write("UserId: ");
+
+                            bool isGuidType = Guid.TryParse(Console.ReadLine(), out Guid userId);
+
+                            if (!isGuidType)
+                            {
+                                Console.WriteLine("The entered value cannot be Guid type!");
+
+                                break;
+                            }
+
+                            Console.Write("Amount: ");
+
+#nullable disable
+                            decimal amount = decimal.Parse(Console.ReadLine());
+#nullable enable
+                            await UserService.AddDeposit(userId, amount);
                             break;
                         }
                     case Commands.ClearTheConsole:
@@ -68,6 +88,8 @@ namespace MyApplication
                 }
 
             }
+
+            Console.WriteLine("Press one more time to exit");
 
             Console.ReadKey();
         }
